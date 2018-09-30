@@ -1,0 +1,31 @@
+number of length-1 frequent itemsets:109
+number of length-2 frequent itemsets:63
+number of length-3 frequent itemsets:2
+number of all lengths frequent itemsets:174
+frozenset(['G10_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G72_UP', 'G96_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G72_UP', 'G59_UP'])->frozenset(['G82_DOWN'])
+frozenset(['G72_UP'])->frozenset(['G59_UP'])
+frozenset(['G88_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G82_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G38_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G59_UP'])->frozenset(['G88_DOWN'])
+frozenset(['G72_UP'])->frozenset(['G82_DOWN', 'G59_UP'])
+frozenset(['G82_DOWN', 'G59_UP'])->frozenset(['G72_UP'])
+frozenset(['G96_DOWN', 'G59_UP'])->frozenset(['G72_UP'])
+frozenset(['G6_UP'])->frozenset(['G59_UP'])
+frozenset(['G59_UP'])->frozenset(['G72_UP'])
+frozenset(['G13_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G1_UP'])->frozenset(['G59_UP'])
+frozenset(['G96_DOWN'])->frozenset(['G72_UP', 'G59_UP'])
+frozenset(['G59_UP'])->frozenset(['G13_DOWN'])
+frozenset(['G28_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G72_UP', 'G59_UP'])->frozenset(['G96_DOWN'])
+frozenset(['G59_UP'])->frozenset(['G96_DOWN'])
+frozenset(['G96_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G32_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G82_DOWN'])->frozenset(['G72_UP', 'G59_UP'])
+frozenset(['G59_UP'])->frozenset(['G82_DOWN'])
+frozenset(['G72_UP', 'G82_DOWN'])->frozenset(['G59_UP'])
+frozenset(['G87_UP'])->frozenset(['G59_UP'])
+26
