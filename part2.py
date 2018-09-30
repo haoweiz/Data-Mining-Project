@@ -201,12 +201,6 @@ def template1(str1,str2,item_list):
             for i in range(1,len(all_frequent_itemset)):
                 frequent_itemset = all_frequent_itemset[i]
                 for elem_frequent_itemset in frequent_itemset.keys():
-                    flag = 1
-                    for elem in item_set:
-                        if elem in elem_frequent_itemset:
-                            flag = 0
-                            break
-                    if flag==0: continue
                     subsets = [[]]
                     for itemset in elem_frequent_itemset:
                         subsets += [i+[itemset] for i in subsets]
@@ -229,8 +223,6 @@ def template1(str1,str2,item_list):
             for i in range(1,len(all_frequent_itemset)):
                 frequent_itemset = all_frequent_itemset[i]
                 for elem_frequent_itemset in frequent_itemset.keys():
-                    if len(item_set&elem_frequent_itemset) != itemnum:
-                        continue
                     subsets = [[]]
                     for itemset in elem_frequent_itemset:
                         subsets += [i+[itemset] for i in subsets]
@@ -283,12 +275,6 @@ def template1(str1,str2,item_list):
             for i in range(1,len(all_frequent_itemset)):
                 frequent_itemset = all_frequent_itemset[i]
                 for elem_frequent_itemset in frequent_itemset.keys():
-                    flag = 1
-                    for elem in item_set:
-                        if elem in elem_frequent_itemset:
-                            flag = 0
-                            break
-                    if flag==0: continue
                     subsets = [[]]
                     for itemset in elem_frequent_itemset:
                         subsets += [i+[itemset] for i in subsets]
@@ -311,8 +297,6 @@ def template1(str1,str2,item_list):
             for i in range(1,len(all_frequent_itemset)):
                 frequent_itemset = all_frequent_itemset[i]
                 for elem_frequent_itemset in frequent_itemset.keys():
-                    if len(item_set&elem_frequent_itemset) != itemnum:
-                        continue
                     subsets = [[]]
                     for itemset in elem_frequent_itemset:
                         subsets += [i+[itemset] for i in subsets]
@@ -329,9 +313,10 @@ def template1(str1,str2,item_list):
                             result.add(output)
     else:
         print "parameter1 error!"
-    return result
+    return result,len(result)
 
 def template2(str1,size):
+    result = set()
     if str1=="RULE":
         for i in range(size-1,len(all_frequent_itemset)):
             frequent_itemset = all_frequent_itemset[i]
@@ -386,30 +371,77 @@ def template2(str1,size):
                             result.add(output)
     else:
         print "parameter1 error!"
+    return result,len(result)
 
 def template3(*args):
     rule = args[0]
     if rule[1:3]=="or":
         if rule[0] =="1" and rule[-1]=="1":
-            return template1(args[1],args[2],args[3])|template1(args[4],args[5],args[6])
+            result1,num1 = template1(args[1],args[2],args[3])
+            result2,num2 = template1(args[4],args[5],args[6])
+            result = result1|result2
+            return result,len(result)
         elif rule[0] =="1" and rule[-1]=="2":
-            return template1(args[1],args[2],args[3])|template2(args[4],args[5])      
+            result1,num1 = template1(args[1],args[2],args[3])
+            result2,num2 = template2(args[4],args[5])
+            result = result1|result2
+            return result,len(result)
         elif rule[0] == "2" and rule[-1]=="1":
-            return template2(args[1],args[2])|template1(args[3],args[4],args[5])
+            result1,num1 = template2(args[1],args[2])
+            result2,num2 = template1(args[3],args[4],args[5])
+            result = result1|result2
+            return result,len(result)
         else:
-            return template2(args[1],args[2])|template2(args[3],args[4])
+            result1,num1 = template2(args[1],args[2])
+            result2,num2 = template2(args[3],args[4])
+            result = result1|result2
+            return result,len(result)
     elif rule[1:4]=="and":
         if rule[0] =="1" and rule[-1]=="1":
-            return template1(args[1],args[2],args[3])&template1(args[4],args[5],args[6])
+            result1,num1 = template1(args[1],args[2],args[3])
+            result2,num2 = template1(args[4],args[5],args[6])
+            result = result1&result2
+            return result,len(result)
         elif rule[0] =="1" and rule[-1]=="2":
-            return template1(args[1],args[2],args[3])&template2(args[4],args[5])      
+            result1,num1 = template1(args[1],args[2],args[3])
+            result2,num2 = template2(args[4],args[5])
+            result = result1&result2
+            return result,len(result) 
         elif rule[0] == "2" and rule[-1]=="1":
-            return template2(args[1],args[2])&template1(args[3],args[4],args[5])
+            result1,num1 = template2(args[1],args[2])
+            result2,num2 = template1(args[3],args[4],args[5])
+            result = result1&result2
+            return result,len(result)
         else:
-            return template2(args[1],args[2])&template2(args[3],args[4])
+            result1,num1 = template2(args[1],args[2])
+            result2,num2 = template2(args[3],args[4])
+            result = result1&result2
+            return result,len(result)
     else:
         print "parameter1 error!"
 
 if __name__ == "__main__":
     apriori()
-    print template3("1and1", "RULE", "ANY", ['G59_UP'], "HEAD", "1", ['G59_UP'])
+    result11,cnt = template1("RULE","ANY",["G59_UP"]);print cnt
+    result12,cnt = template1("RULE","NONE",["G59_UP"]);print cnt
+    result13,cnt = template1("RULE","1",["G59_UP","G10_DOWN"]);print cnt
+    result14,cnt = template1("HEAD","ANY",["G59_UP"]);print cnt
+    result15,cnt = template1("HEAD","NONE",["G59_UP"]);print cnt
+    result16,cnt = template1("HEAD","1",["G59_UP","G10_DOWN"]);print cnt
+    result17,cnt = template1("BODY","ANY",["G59_UP"]);print cnt
+    result18,cnt = template1("BODY","NONE",["G59_UP"]);print cnt
+    result19,cnt = template1("BODY","1",["G59_UP","G10_DOWN"]);print cnt
+
+    result21,cnt = template2("RULE",3);print cnt
+    result22,cnt = template2("HEAD",2);print cnt
+    result23,cnt = template2("BODY",1);print cnt
+
+    result31,cnt = template3("1or1","HEAD","ANY",["G10_DOWN"],"BODY","1", ["G59_UP"]);print cnt
+    result32,cnt = template3("1and1","HEAD","ANY",["G10_DOWN"],"BODY","1",["G59_UP"]);print cnt
+    result33,cnt = template3("1or2","HEAD","ANY",["G10_DOWN"],"BODY",2);print cnt
+    result34,cnt = template3("1and2","HEAD","ANY",["G10_DOWN"],"BODY",2);print cnt
+    result35,cnt = template3("2or2","HEAD",1,"BODY",2);print cnt
+    result36,cnt = template3("2and2","HEAD",1,"BODY",2);print cnt
+
+
+
