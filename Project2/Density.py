@@ -33,16 +33,24 @@ def regionQuery(alldata,Point,eps,visited):
 def expandCluster(PointIndex,NeighborPts,clusters,eps,MinPts,visited,alldata,newid2kind):
     cluster = set()
     cluster.add(PointIndex)
-    for point in NeighborPts:
-        if visited[point] == True:
-            continue
-        visited[point] = True
-        newNeighborPts = regionQuery(alldata,alldata[point],eps,visited)
-        if len(newNeighborPts)>=MinPts:
-            NeighborPts = newNeighborPts|NeighborPts
-        if point not in newid2kind:
-            cluster.add(point)
-            newid2kind[point] = len(clusters)
+    flag = True
+    oldNeighborPtsLen = len(NeighborPts)
+    while flag==True:
+        for point in NeighborPts:
+            if visited[point] == True:
+                continue
+            visited[point] = True
+            newNeighborPts = regionQuery(alldata,alldata[point],eps,visited)
+            if len(newNeighborPts)>=MinPts:
+                NeighborPts = newNeighborPts|NeighborPts
+            if point not in newid2kind:
+                cluster.add(point)
+                newid2kind[point] = len(clusters)
+        newNeighborPtsLen = len(NeighborPts)
+        if oldNeighborPtsLen==newNeighborPtsLen:
+            flag = False
+        else:
+            oldNeighborPtsLen = newNeighborPtsLen
     clusters.append(cluster)
 
 def draw(alldata,clusters):
@@ -77,10 +85,12 @@ def accuracy(alldata,classify,newid2kind):
     for elem in classify:
         for data in classify[elem]:
             id2kind[int(data[0])-1] = elem
-    total = (len(alldata)-1)*len(alldata)/2
+    total = len(alldata)*len(alldata)
+    print id2kind
+    print newid2kind
     correct = 0
-    for i in range(0,len(alldata)-1):
-        for j in range(i+1,len(alldata)):
+    for i in range(0,len(alldata)):
+        for j in range(0,len(alldata)):
             if id2kind[i]==id2kind[j] and newid2kind[i]==newid2kind[j]:
                 correct += 1
             elif id2kind[i]!=id2kind[j] and newid2kind[i]!=newid2kind[j]:
@@ -113,4 +123,4 @@ def Density(filename,MinPts,eps):
     draw(alldata,clusters)
 
 if __name__ == "__main__":
-    Density("cho.txt",3,15)
+    Density("cho.txt",2,1)

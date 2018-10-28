@@ -107,10 +107,22 @@ def draw(index2cluster,alldata):
 
 def accuracy(alldata,classify,index2cluster):
     id2kind = dict()
+    total = len(alldata)*len(alldata)
+    correct = 0
     for elem in classify:
         for data in classify[elem]:
-            id2kind[data[0]] = elem
-    
+            id2kind[int(data[0])-1] = elem
+    newid2kind = dict()
+    for i in range(0,len(index2cluster)):
+        for elem in index2cluster[i]:
+            newid2kind[elem] = i
+    for elem1 in range(0,len(alldata)):
+        for elem2 in range(0,len(alldata)):
+            if id2kind[elem1]==id2kind[elem2] and newid2kind[elem1]==newid2kind[elem2]:
+                correct = correct+1
+            elif id2kind[elem1]!=id2kind[elem2] and newid2kind[elem1]!=newid2kind[elem2]:
+                correct = correct+1
+    return float(correct)/float(total)
 
 def Hierachial(filename):
     alldata,classify = readfile(filename)
@@ -118,8 +130,8 @@ def Hierachial(filename):
     while len(dismat)>len(classify):
         first,second = getMergeIndex(alldata,dismat,index2cluster)
         dismat,index2cluster = Merge(first,second,dismat,index2cluster,alldata)
-    print index2cluster
     draw(index2cluster,alldata)
+    print accuracy(alldata,classify,index2cluster)
 
 if __name__ == "__main__":
     Hierachial("cho.txt")
