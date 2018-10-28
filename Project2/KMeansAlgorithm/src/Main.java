@@ -16,7 +16,7 @@ public class Main {
 	public Main() throws IOException {
 		
 	}
-
+	// Generate Center File
 	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException {
 	      Configuration conf = new Configuration();
 	      String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
@@ -29,16 +29,23 @@ public class Main {
 	      for(int i = 0; i < otherArgs.length - 1; ++i) {
 	          InputPath.add(otherArgs[i]);
 	      }
-	      Center center = new Center(otherArgs[otherArgs.length-1]);
+	      Center center = new Center();
+	      center.setOutputFilePath(otherArgs[otherArgs.length-1]);
 	      center.setInputPath(InputPath);
 	      center.InitCenter();
 	      String outputPath = otherArgs[otherArgs.length-1];
 	      HashMap<Integer,ArrayList<Float>> oldCenter = null;
 	      HashMap<Integer,ArrayList<Float>> newCenter = center.getCenter(center.getCenterFilePath()+center.getFileName());
 
-	      
+    	  String centerFileName = otherArgs[otherArgs.length-1]+"/"+outputFileName;
+    	  String dstPath = ".";
 	      HDFSOperator hdfsoperator = new HDFSOperator();
 	      while(!newCenter.equals(oldCenter)) {
+	    	  oldCenter = newCenter;
+	    	  hdfsoperator.move(centerFileName, dstPath);
+	    	  hdfsoperator.deleteDir(otherArgs[otherArgs.length-1]);
+	    	  center.setOutputFilePath(dstPath);
+	    	  
 		      Job job = Job.getInstance(conf, "KMeans");
 		      job.setJarByClass(Main.class);
 		      job.setMapperClass(KMeansMapper.class);
@@ -51,13 +58,10 @@ public class Main {
 		      }
 		      FileOutputFormat.setOutputPath(job, new Path(outputPath));
 	    	  job.waitForCompletion(true);
-
-	    	  oldCenter = newCenter;
-	    	  String centerFileName = otherArgs[otherArgs.length-1]+"/"+outputFileName;
+	    	  
 	    	  newCenter = center.getCenter(centerFileName);
-	    	  hdfsoperator.deleteDir(otherArgs[otherArgs.length-1]);
+	    	  hdfsoperator.deleteFile(dstPath+"/"+outputFileName);
 	      }
-	      
 	      System.exit(0);
 	}
 

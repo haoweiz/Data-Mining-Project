@@ -19,4 +19,14 @@ public class HDFSOperator {
 	public void deleteDir(String path) throws IllegalArgumentException, IOException {
 		hdfs.delete(new Path(path),true);
 	}
+	
+	public void deleteFile(String path) throws IllegalArgumentException, IOException {
+		hdfs.delete(new Path(path),false);
+	}
+
+	public void move(String remoteFilePath, String remoteToFilePath) throws IOException {
+		Path srcPath = new Path(remoteFilePath);
+		Path dstPath = new Path(remoteToFilePath);
+		hdfs.rename(srcPath, dstPath);
+	}
 }

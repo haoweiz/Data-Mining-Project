@@ -15,28 +15,33 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 public class Center {
+	private static String centerFilePath = "Output/";
+	private static String centerFileName = "part-r-00000";
+	private static HashMap<Integer,ArrayList<ArrayList<Float>>> allkind = new HashMap<Integer,ArrayList<ArrayList<Float>>>();
+	
 	private Parser parser;
 	private Configuration conf;
-	private String centerFilePath = null;
-	private String centerFileName = "part-r-00000";
 	private int IndexofKind = 1;
 	private ArrayList<String> InputPath;
-	private HashMap<Integer,ArrayList<ArrayList<Float>>> allkind;
 	
-	public Center(String output) throws IOException {
-		centerFilePath = output+"/";
-		allkind = new HashMap<Integer,ArrayList<ArrayList<Float>>>();
+	public Center() throws IOException {
 		conf = new Configuration();
 		parser = new Parser();
 	}
 	public void setInputPath(ArrayList<String> InputPath) {
 		this.InputPath = InputPath;
 	}
+	public void setOutputFilePath(String path) {
+		centerFilePath = path + "/";
+	}
 	public String getCenterFilePath() {
 		return centerFilePath;
 	}
 	public String getFileName() {
 		return centerFileName;
+	}
+	public static HashMap<Integer,ArrayList<ArrayList<Float>>> getAllKind() {
+		return allkind;
 	}
 	public void writeFile(String dst,HashMap<Integer,ArrayList<Float>> cen) throws IOException {
 		Path dstPath = new Path(dst);
@@ -109,7 +114,6 @@ public class Center {
 		HashMap<Integer, ArrayList<Float>> result = new HashMap<Integer,ArrayList<Float>>();
 		String line = null;
 		FileSystem fs = FileSystem.get(conf);
-		//String path = this.getCenterFilePath()+this.getFileName();
 		Path file = new Path(path);
 		FSDataInputStream inStream = fs.open(file);
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream));

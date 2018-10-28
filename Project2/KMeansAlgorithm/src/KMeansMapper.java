@@ -15,7 +15,8 @@ public class KMeansMapper extends Mapper<Object,Text,IntWritable,Text>{
 	public KMeansMapper() throws IOException {
 		parser = new Parser();
 		Center c = new Center();
-		center = c.getCenter(c.getCenterFilePath()+c.getFileName());
+		String centerPath = c.getCenterFilePath()+c.getFileName();
+		center = c.getCenter(centerPath);
 	}
 	
 	public void map(Object key,Text value,Context context) throws IOException, InterruptedException {
