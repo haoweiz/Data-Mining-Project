@@ -134,4 +134,4 @@ def Hierachial(filename):
     print accuracy(alldata,classify,index2cluster)
 
 if __name__ == "__main__":
-    Hierachial("cho.txt")
+    Hierachial("demo.txt")

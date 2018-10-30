@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -58,7 +57,26 @@ public class Center {
 		}
 		outStream.close();
 	}
-	public void InitCenter() throws IOException {
+	public ArrayList<ArrayList<Float>> readAllkindInArrayList() throws IOException{
+		ArrayList<ArrayList<Float>> result = new ArrayList<ArrayList<Float>>();
+		ArrayList<String> allfiles = new ArrayList<String>();
+		for(String path : InputPath) {
+			allfiles.addAll(this.getFileList(path));
+		}
+		FileSystem fs = FileSystem.get(conf);
+		for(String filepath : allfiles) {
+			String line = null;
+			Path file = new Path(filepath);
+			FSDataInputStream inStream = fs.open(file);
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream));
+			while((line = bufferedReader.readLine()) != null) {
+				ArrayList<Float> data = parser.decode(line);
+				result.add(data);
+			}
+		}
+		return result;
+	}
+	public void readAllKind() throws IOException{
 		ArrayList<String> allfiles = new ArrayList<String>();
 		for(String path : InputPath) {
 			allfiles.addAll(this.getFileList(path));
@@ -83,18 +101,28 @@ public class Center {
 				}
 			}
 		}
+	}
+	public void InitCenter(ArrayList<Integer> centerSeeds) throws IOException {
+		this.readAllKind();
 		HashMap<Integer,ArrayList<Float>> seed = new HashMap<Integer,ArrayList<Float>>();
 		Iterator<Entry<Integer, ArrayList<ArrayList<Float>>>> iter = allkind.entrySet().iterator();
+		int count = 1;
 		while(iter.hasNext()) {
 			Entry<Integer, ArrayList<ArrayList<Float>>> entry = iter.next();
-			Integer key = entry.getKey();
 			ArrayList<ArrayList<Float>> value = entry.getValue();
-			Random random = new Random();
-			int index = random.nextInt(value.size());
-			ArrayList<Float> data = value.get(index);
-			data.remove(0);
-			data.remove(0);
-			seed.put(key,data);
+			for(ArrayList<Float> elem : value) {
+				for(Integer s : centerSeeds) {
+					if(s.intValue() == (int)Math.ceil(elem.get(0))) {
+						ArrayList<Float> data = new ArrayList<Float>();
+						for(int i = 2;i != elem.size();++i) {
+							data.add(elem.get(i));
+						}
+						Integer key = new Integer(count);
+						seed.put(key,data);
+						count++;
+					}
+				}
+			}
 		}
 		writeFile(centerFilePath+centerFileName,seed);
 	}

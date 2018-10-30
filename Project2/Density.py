@@ -26,7 +26,7 @@ def regionQuery(alldata,Point,eps,visited):
         distance = 0.0
         for index in range(2,len(alldata[0])):
             distance = distance+(alldata[i][index]-Point[index])**2
-        if distance<=eps:
+        if distance**0.5<=eps:
             NeighborPts.add(i)
     return NeighborPts
 
@@ -86,8 +86,6 @@ def accuracy(alldata,classify,newid2kind):
         for data in classify[elem]:
             id2kind[int(data[0])-1] = elem
     total = len(alldata)*len(alldata)
-    print id2kind
-    print newid2kind
     correct = 0
     for i in range(0,len(alldata)):
         for j in range(0,len(alldata)):
@@ -123,4 +121,4 @@ def Density(filename,MinPts,eps):
     draw(alldata,clusters)
 
 if __name__ == "__main__":
-    Density("cho.txt",2,1)
+    Density("demo.txt",3,1)

@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.apache.hadoop.io.IntWritable;
@@ -30,10 +29,7 @@ public class KMeansReducer extends Reducer<IntWritable,Text,IntWritable,Text> {
 		}
 		for(int i = 0;i != sum.size();++i) {
 			float newVal = sum.get(i)/count;
-			DecimalFormat df = new DecimalFormat("0.00");
-			String newValFormat = df.format(newVal);
-			float resVal = Float.valueOf(newValFormat);
-			sum.set(i,resVal);
+			sum.set(i,newVal);
 		}
 		String newCenter = parser.code(sum,false);
 		context.write(key,new Text(newCenter));
