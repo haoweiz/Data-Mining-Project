@@ -107,7 +107,7 @@ def draw(index2cluster,alldata):
 
 def accuracy(alldata,classify,index2cluster):
     id2kind = dict()
-    total = len(alldata)*len(alldata)
+    total = len(alldata)*(len(alldata)-1)/2
     correct = 0
     for elem in classify:
         for data in classify[elem]:
@@ -117,7 +117,7 @@ def accuracy(alldata,classify,index2cluster):
         for elem in index2cluster[i]:
             newid2kind[elem] = i
     for elem1 in range(0,len(alldata)):
-        for elem2 in range(0,len(alldata)):
+        for elem2 in range(elem1+1,len(alldata)):
             if id2kind[elem1]==id2kind[elem2] and newid2kind[elem1]==newid2kind[elem2]:
                 correct = correct+1
             elif id2kind[elem1]!=id2kind[elem2] and newid2kind[elem1]!=newid2kind[elem2]:
@@ -134,4 +134,4 @@ def Hierachial(filename):
     print accuracy(alldata,classify,index2cluster)
 
 if __name__ == "__main__":
-    Hierachial("demo.txt")
+    Hierachial("demo2.txt")

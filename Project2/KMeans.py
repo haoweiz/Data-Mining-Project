@@ -111,13 +111,13 @@ def accuracy(id2kind,newclassify,alldata):
     for elem in newclassify:
         for data in newclassify[elem]:
             newid2kind[int(data[0])] = elem
-    total = len(alldata)*len(alldata)
+    total = len(alldata)*(len(alldata)-1)/2
     intid2kind = dict()
     for elem in id2kind:
         intid2kind[int(elem)]=id2kind[elem]
     correct = 0
     for i in range(0,len(alldata)):
-        for j in range(0,len(alldata)):
+        for j in range(i+1,len(alldata)):
             if intid2kind[i+1]==intid2kind[j+1] and newid2kind[i+1]==newid2kind[j+1]:
                 correct += 1
             elif intid2kind[i+1]!=intid2kind[j+1] and newid2kind[i+1]!=newid2kind[j+1]:
